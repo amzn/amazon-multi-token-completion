@@ -31,7 +31,9 @@ Bibtex entry:
 Download data from [here](https://registry.opendata.aws/multi-token-completion/). 
 
 ### Configuration
-Update home_dir and data_path in `configuration.py`
+* pip install -r requirements.txt
+* pip install transformers==4.5.1
+* Update home_dir and data_path in `configuration.py`
 
 ### Training
 
