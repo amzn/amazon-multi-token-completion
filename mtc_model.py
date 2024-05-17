@@ -434,36 +434,21 @@ class Seq2Seq(pl.LightningModule):
         return hidden
 
 
-def parse_data(dataset_name='wiki', dataset_suffix=''):
+def parse_data(dataset_name='wiki_pub', dataset_suffix=''):
     bert: BertModel = AutoModel.from_pretrained(p['model']).cuda()
     tokenizer: PreTrainedTokenizerFast = AutoTokenizer.from_pretrained(p['model'])
     if dataset_name == 'wiki_pub':
-        s3_prefix = f'{DATA_PATH}/MultiTokenCompletion/mlm_dataset/publication_data'
+        s3_prefix = f'{DATA_PATH}/general_purpose'
         train_dataset = datasets.DatasetDict(
-            {k: datasets.Dataset.from_pandas(pd.read_csv(f'{s3_prefix}/{k}_set.csv', na_filter=False)) for k in ['train', 'dev', 'test']})
-    elif dataset_name == 'wiki_unseen':
-        train_dataset = datasets.load_dataset('csv',
-                                              data_files={
-                                                  'train': 'data/28_6_dataset/train_set.csv',
-                                                  'dev': 'data/28_6_dataset/seen_dev_set.csv',
-                                                  'test': 'data/28_6_dataset/seen_test_set.csv',
-                                              }, na_filter=False)
-    elif dataset_name == 'pubmed':
-        s3_prefix = f'{DATA_PATH}/MultiTokenCompletion/pubmed_dataset_freq_50'
+            {k: datasets.Dataset.from_pandas(pd.read_csv(f'{s3_prefix}/{k}.csv', na_filter=False)) for k in ['train', 'dev', 'test']})
+    elif dataset_name == 'pubmed_frequent':
+        s3_prefix = f'{DATA_PATH}/pubmed_frequent'
         train_dataset = datasets.DatasetDict(
-            {k: datasets.Dataset.from_pandas(pd.read_csv(f'{s3_prefix}/pubmed_{k}_set.csv', na_filter=False)) for k in ['train', 'dev', 'test']})
-    elif dataset_name == 'pubmed_ext':
-        s3_prefix = f'{DATA_PATH}/MultiTokenCompletion/pubmed_mtc_dataset'
+            {k: datasets.Dataset.from_pandas(pd.read_csv(f'{s3_prefix}/{k}.csv', na_filter=False)) for k in ['train', 'dev', 'test']})
+    elif dataset_name == 'pubmed_key_phrases':
+        s3_prefix = f'{DATA_PATH}/MultiTokenCompletion/pubmed_key_phrases'
         train_dataset = datasets.DatasetDict(
-            {k: datasets.Dataset.from_pandas(pd.read_csv(f'{s3_prefix}/{k}_set.csv', na_filter=False)) for k in ['train', 'dev', 'test']})
-    elif dataset_name == 'pubmed_large':
-        s3_prefix = f'{DATA_PATH}/MultiTokenCompletion/pubmed_mtc_dataset_large_92K_dataset'
-        train_dataset = datasets.DatasetDict(
-            {k: datasets.Dataset.from_pandas(pd.read_csv(f'{s3_prefix}/{k}_set.csv', na_filter=False)) for k in ['train', 'dev', 'test']})
-    elif dataset_name == 'pubmed_largespec':
-        s3_prefix = f'{DATA_PATH}/MultiTokenCompletion/pubmed_mtc_dataset_large_without_reg'
-        train_dataset = datasets.DatasetDict(
-            {k: datasets.Dataset.from_pandas(pd.read_csv(f'{s3_prefix}/{k}_set.csv', na_filter=False)) for k in ['train', 'dev', 'test']})
+            {k: datasets.Dataset.from_pandas(pd.read_csv(f'{s3_prefix}/{k}.csv', na_filter=False)) for k in ['train', 'dev', 'test']})
     else:
         raise Exception(f'parsing of dataset {dataset_name} is not defined')
 
@@ -485,7 +470,7 @@ def parse_data(dataset_name='wiki', dataset_suffix=''):
         get_mask_loc,
         batched=True,
         load_from_cache_file=True,
-        remove_columns=['nps', 'range', 'span_lower', 'row_num']
+        remove_columns=['range', 'span_lower']
     )
 
     dataset_w_maskloc128 = dataset_w_maskloc.filter(

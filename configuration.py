@@ -1,5 +1,5 @@
 DATA_PATH = None
-HOME_DIR = None
+HOME_DIR = '.'
 
 SAGEMAKER_ROLE = None
 SAGEMAKER_BUCKET = None

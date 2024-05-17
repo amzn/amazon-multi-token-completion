@@ -27,13 +27,14 @@ Bibtex entry:
 
 
 ## Steps to run the code
-### Data
-Download data from [here](https://registry.opendata.aws/multi-token-completion/). 
 
 ### Configuration
 * pip install -r requirements.txt
 * pip install transformers==4.5.1
-* Update home_dir and data_path in `configuration.py`
+* Update data_path in `configuration.py` to 's3://multi-token-completion'
+
+### Data preprocessing
+To create the dataset you will first need to parse our released data by running mtc_model. For example, to create the wikipedia dataset run: `mtc_model.py --dataset_name wiki_pub`. This will create the preprocessed dataset under `data/input_data_bert-base-cased_wiki_pub/` using bert-base-cased by default.
 
 ### Training
 
