@@ -30,7 +30,7 @@ Bibtex entry:
 
 ### Configuration
 * pip install -r requirements.txt
-* pip install transformers==4.5.1
+* pip install transformers==4.5.1 ray[default]==1.3.0 torch==1.8.1
 * Update data_path in `configuration.py` to 's3://multi-token-completion'
 
 ### Data preprocessing
